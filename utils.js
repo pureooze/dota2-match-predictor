@@ -20,7 +20,7 @@ async function getMatchDetails(url) {
           res(JSON.parse(data));
         });
       });
-    }, 1500);
+    }, 400);
   });
 
   return request;
@@ -30,7 +30,7 @@ async function parseData(data) {
   const results = [];
 
   console.log("Data: ", data);
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < API.matchLimit; i++) {
     const url = `https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v001?key=${
       API.key
     }&match_id=${data.matches[i].match_id}`;

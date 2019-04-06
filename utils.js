@@ -34,6 +34,15 @@ function getFilteredResults(result) {
 
   for (const player of result.players) {
     filteredResults[`player_${player.player_slot}`] = player.hero_id;
+    filteredResults[`player_${player.player_slot}_gold_per_min`] =
+      player.gold_per_min;
+    filteredResults[`player_${player.player_slot}_xp_per_min`] =
+      player.xp_per_min;
+    filteredResults[`player_${player.player_slot}_kills`] = player.kills;
+    filteredResults[`player_${player.player_slot}_deaths`] = player.deaths;
+    filteredResults[`player_${player.player_slot}_assists`] = player.assists;
+    filteredResults[`player_${player.player_slot}_denies`] = player.denies;
+
     for (let i = 0; i < API.maxLevel; i++) {
       if (player.ability_upgrades && player.ability_upgrades[i] !== undefined) {
         filteredResults[`player_${player.player_slot}_l${i}`] =

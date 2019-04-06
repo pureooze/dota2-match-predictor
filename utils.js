@@ -14,8 +14,6 @@ async function getMatchDetails(url) {
 
         // The whole response has been received. Print out the result.
         response.on("end", () => {
-          //   console.log(JSON.parse(data));
-          //   const result = JSON.parse(data);
           res(JSON.parse(data).result);
         });
       });

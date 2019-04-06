@@ -1,5 +1,4 @@
 const https = require("https");
-
 const API = require("./api.json");
 
 async function getMatchDetails(url) {
@@ -17,7 +16,7 @@ async function getMatchDetails(url) {
         response.on("end", () => {
           //   console.log(JSON.parse(data));
           //   const result = JSON.parse(data);
-          res(JSON.parse(data));
+          res(JSON.parse(data).result);
         });
       });
     }, 400);
@@ -26,18 +25,39 @@ async function getMatchDetails(url) {
   return request;
 }
 
+function getFilteredResults(result) {
+  const filteredResults = {
+    class: result.radiant_win ? 1 : 0,
+    radiant_score: result.radiant_score,
+    dire_score: result.dire_score
+  };
+
+  for (const player of result.players) {
+    filteredResults[`player_${player.player_slot}`] = player.hero_id;
+    for (let i = 0; i < API.maxLevel; i++) {
+      if (player.ability_upgrades && player.ability_upgrades[i] !== undefined) {
+        filteredResults[`player_${player.player_slot}_l${i}`] =
+          player.ability_upgrades[i].ability;
+      } else {
+        filteredResults[`player_${player.player_slot}_l${i}`] = 0;
+      }
+    }
+  }
+
+  return filteredResults;
+}
+
 async function parseData(data) {
   const results = [];
 
   console.log("Data: ", data);
-  for (let i = 0; i < API.matchLimit; i++) {
+  for (let i = 0; i < API.matchLimit && i < data.matches.length; i++) {
     const url = `https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v001?key=${
       API.key
     }&match_id=${data.matches[i].match_id}`;
 
     const result = await getMatchDetails(url);
-    // console.log("Res: ", result);
-    results.push(result);
+    results.push(getFilteredResults(result));
   }
 
   return results;

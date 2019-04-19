@@ -14,21 +14,17 @@ async function getMatchDetails(url) {
 
         // The whole response has been received. Print out the result.
         response.on("end", () => {
-          res(JSON.parse(data).result);
+          res(JSON.parse(data));
         });
       });
-    }, 400);
+    }, 1000);
   });
 
   return request;
 }
 
 function getFilteredResults(result) {
-  const filteredResults = {
-    class: result.radiant_win ? 1 : 0,
-    radiant_score: result.radiant_score,
-    dire_score: result.dire_score
-  };
+  const filteredResults = {};
 
   for (const player of result.players) {
     filteredResults[`player_${player.player_slot}`] = player.hero_id;
@@ -51,20 +47,28 @@ function getFilteredResults(result) {
     }
   }
 
-  return filteredResults;
+  return Object.assign(filteredResults, {
+    radiant_score: result.radiant_score,
+    dire_score: result.dire_score,
+    class: result.radiant_win ? 1 : 0
+  });
 }
 
 async function parseData(data) {
   const results = [];
 
-  console.log("Data: ", data);
+  // console.log("Data: ", data);
   for (let i = 0; i < API.matchLimit && i < data.matches.length; i++) {
-    const url = `https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v001?key=${
-      API.key
-    }&match_id=${data.matches[i].match_id}`;
+    // const url = `https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v001?key=${
+    //   API.key
+    // }&match_id=${data.matches[i].match_id}`;
+    const url = `https://api.opendota.com/api/matches/${
+      data.matches[i].match_id
+    }`;
 
     const result = await getMatchDetails(url);
-    results.push(getFilteredResults(result));
+    // results.push(getFilteredResults(result));
+    results.push(result);
   }
 
   return results;

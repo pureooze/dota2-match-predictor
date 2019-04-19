@@ -8,11 +8,14 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "json2csv": "./node_modules/json2csv/bin/json2csv.js -i trainingData.json -o response.csv"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "https": "^1.0.0"
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
+    "json2csv": "^4.4.1"
   }
 }

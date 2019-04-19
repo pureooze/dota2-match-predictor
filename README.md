@@ -9,6 +9,8 @@ Before running, create an api.json file in the root directory of the project wit
 ```
 {
   "key": YOUR_API_KEY,
-  "matchLimit": "10"
+  "matchLimit": "10",
+  "minPlayers": 10,
+  "skillLevel": 3
 }
 ```
